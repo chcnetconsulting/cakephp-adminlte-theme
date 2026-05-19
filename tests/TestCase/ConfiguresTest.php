@@ -1,56 +1,53 @@
 <?php
+declare(strict_types=1);
+
 namespace AdminLTE\Test\TestCase;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
-/**
- * Class ConfiguresTest
- * @package AdminLTE\Test\TestCase
- */
 class ConfiguresTest extends TestCase
 {
-
-    public function testDefaultConfigures()
+    public function testDefaultConfigures(): void
     {
         $expected = [
             'title' => 'AdminLTE',
             'logo' => [
                 'mini' => '<b>A</b>LT',
-                'large' => '<b>Admin</b>LTE'
+                'large' => '<b>Admin</b>LTE',
             ],
             'login' => [
                 'show_remember' => true,
                 'show_register' => true,
-                'show_social' => true
+                'show_social' => true,
             ],
             'folder' => ROOT,
-            'skin' => 'blue'
+            'skin' => 'blue',
         ];
 
-        include dirname(dirname(dirname(__FILE__))) . '/config/bootstrap.php';
+        include dirname(__DIR__, 2) . '/config/bootstrap.php';
         $this->assertEquals($expected, Configure::read('Theme'));
     }
 
-    public function testNotOverridingUserConfigures()
+    public function testNotOverridingUserConfigures(): void
     {
         $expected = [
             'title' => 'my site name',
             'logo' => [
                 'mini' => 'ALT',
-                'large' => 'AdminLTE'
+                'large' => 'AdminLTE',
             ],
             'login' => [
                 'show_remember' => false,
                 'show_register' => false,
-                'show_social' => false
+                'show_social' => false,
             ],
-            'folder' => ROOT . DS . 'sub',
-            'skin' => 'red'
+            'folder' => ROOT . DIRECTORY_SEPARATOR . 'sub',
+            'skin' => 'red',
         ];
 
         Configure::write('Theme', $expected);
-        include dirname(dirname(dirname(__FILE__))) . '/config/bootstrap.php';
+        include dirname(__DIR__, 2) . '/config/bootstrap.php';
         $this->assertEquals($expected, Configure::read('Theme'));
     }
 }

@@ -1,12 +1,17 @@
-# CakePHP AdminLTE Theme (2.0.0)
+# CakePHP AdminLTE Theme (3.0.0)
 
 **What's the news**
 
 The AdminLTE was updated version to 2.4.5.
 
-The CakePHP was updated version compatible to 4.0.0.
+The CakePHP version compatibility was bumped to 5.x (PHP 8.1+, tested up to PHP 8.5).
 
-This release 2.0.0 is can be considered the stable version, as indicated in the [SemVer.org](https://semver.org/) recommendations.
+This release 3.0.0 keeps the same public API as the 2.x line, so existing themes that worked against CakePHP 4 should continue to work after upgrading the host application to CakePHP 5.
+
+### Requirements
+
+- PHP 8.1 or newer (PHP 8.5 supported)
+- CakePHP 5.x
 
 ### Installation
 
@@ -21,8 +26,9 @@ composer require maiconpinto/cakephp-adminlte-theme
 ```php
 // src/Application.php
 
-public function bootstrap()
+public function bootstrap(): void
 {
+    parent::bootstrap();
     $this->addPlugin('AdminLTE');
 }
 ```
@@ -44,7 +50,7 @@ public function beforeRender(EventInterface  $event)
 ```php
 // src/View/AppView.php
 
-public function initialize()
+public function initialize(): void
 {
     $this->loadHelper('Form', ['className' => 'AdminLTE.Form']);
 }

@@ -1,15 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace AdminLTE\View\Helper;
 
 use Cake\View\Helper\FormHelper as CakeFormHelper;
-use Cake\Utility\Hash;
 use Cake\View\View;
-use Cake\Utility\Inflector;
 
-class FormHelper extends CakeFormHelper {
-
-    private $templates = [
+class FormHelper extends CakeFormHelper
+{
+    /**
+     * AdminLTE-flavored template strings for the FormHelper.
+     *
+     * @var array<string, string>
+     */
+    private array $adminLteTemplates = [
         'button' => '<button{{attrs}}>{{text}}</button>',
         'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
         'checkboxFormGroup' => '{{label}}',
@@ -41,18 +45,22 @@ class FormHelper extends CakeFormHelper {
         'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
         'radioWrapper' => '<div class="radio">{{label}}</div>',
         'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>',
-        'submitContainer' => '<div class="box-footer {{required}}">{{content}}</div>'
+        'submitContainer' => '<div class="box-footer {{required}}">{{content}}</div>',
     ];
 
-    public function __construct(View $View, array $config = [])
+    public function __construct(View $view, array $config = [])
     {
-        $this->_defaultConfig['templates'] = array_merge($this->_defaultConfig['templates'], $this->templates);
-        parent::__construct($View, $config);
+        $this->_defaultConfig['templates'] = array_merge(
+            $this->_defaultConfig['templates'],
+            $this->adminLteTemplates
+        );
+        parent::__construct($view, $config);
     }
 
-    public function create($context = null, array $options = []) : string
+    public function create(mixed $context = null, array $options = []): string
     {
         $options += ['role' => 'form'];
+
         return parent::create($context, $options);
     }
 
@@ -60,67 +68,46 @@ class FormHelper extends CakeFormHelper {
     {
         $options += ['escape' => false, 'secure' => false, 'class' => 'btn btn-success'];
         $options['text'] = $title;
+
         return $this->widget('button', $options);
     }
 
     public function submit(?string $caption = null, array $options = []): string
     {
         $options += ['class' => 'btn btn-success'];
+
         return parent::submit($caption, $options);
     }
 
     /**
-     * 
-     * {@inheritDoc}
-     * @see \Cake\View\Helper\FormHelper::input()
-     * @deprecated 1.1.1 Use FormHelper::control() instead, due to \Cake\View\Helper\FormHelper::input() deprecation 
+     * Backwards-compatibility shim for templates written against v2.x of this
+     * theme. CakePHP 5 removed `FormHelper::input()`; this delegates to
+     * `control()` while applying the AdminLTE `form-control` styling for
+     * non-checkbox/radio/date types.
+     *
+     * @deprecated 3.0.0 Use FormHelper::control() instead.
      */
-    public function input($fieldName, array $options = [])
+    public function input(string $fieldName, array $options = []): string
     {
+        return $this->control($fieldName, $options);
+    }
 
-        $_options = [];
-
+    public function control(string $fieldName, array $options = []): string
+    {
         if (!isset($options['type'])) {
             $options['type'] = $this->_inputType($fieldName, $options);
         }
 
-        switch($options['type']) {
+        switch ($options['type']) {
             case 'checkbox':
             case 'radio':
             case 'date':
                 break;
             default:
-                $_options = ['class' => 'form-control'];
+                $options += ['class' => 'form-control'];
                 break;
-
         }
-
-        $options += $_options;
 
         return parent::control($fieldName, $options);
     }
-	public function control(string $fieldName, array $options = []): string
-	{
-
-		$_options = [];
-
-		if (!isset($options['type'])) {
-			$options['type'] = $this->_inputType($fieldName, $options);
-		}
-
-		switch($options['type']) {
-			case 'checkbox':
-			case 'radio':
-			case 'date':
-				break;
-			default:
-				$_options = ['class' => 'form-control'];
-				break;
-
-		}
-
-		$options += $_options;
-
-		return parent::control($fieldName, $options);
-	}
 }
