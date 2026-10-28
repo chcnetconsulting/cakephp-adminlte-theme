@@ -1,7 +1,7 @@
 {
   "name": "maiconpinto/cakephp-adminlte-theme",
   "description": "CakePHP 5.x AdminLTE Theme.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "cakephp-plugin",
   "keywords": ["cakephp", "templates", "plugin"],
   "homepage": "https://github.com/maiconpinto/cakephp-adminlte-theme",
